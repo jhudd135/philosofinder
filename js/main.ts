@@ -54,4 +54,5 @@ if (2 < args.length) {
 
 console.log("start url:", start);
 console.log("max iterations:", n);
+console.log("target url:", target);
 linkChain(start, [], n, target, 0);
