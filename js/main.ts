@@ -2,8 +2,12 @@ import Xray from "x-ray"
 
 const x = Xray()
 
-function linkChain(url, stop, max, target, count) {
-    x(url, "#mw-content-text p > a", {href: "@href"})((err, data) => {
+function lastPathComponent(url: string) {
+    return url.substring(url.lastIndexOf("/") + 1).toLowerCase().replace(/_/g, " ")
+}
+
+function linkChain(url, stop, max, target: string, count) {
+    x(url, {href: "#mw-content-text p > a@href", title: "span.mw-page-title-main"})((err, data: {href: string, title: string}) => {
         if (err) {
             console.log(err);
             return;
@@ -13,8 +17,8 @@ function linkChain(url, stop, max, target, count) {
             console.log(data);
             return;
         }
-        console.log(count, data.href);
-        if (data.href.toLowerCase() === target.toLowerCase()) {
+        console.log(count, url, data.title);
+        if (url.toLowerCase() === target.toLowerCase() || lastPathComponent(target) === data.title.toLowerCase()) {
             console.log("target found!")
             return;
         }
@@ -55,4 +59,5 @@ if (2 < args.length) {
 console.log("start url:", start);
 console.log("max iterations:", n);
 console.log("target url:", target);
+console.log("target lpc:", lastPathComponent(target));
 linkChain(start, [], n, target, 0);
